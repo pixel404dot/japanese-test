@@ -2,7 +2,9 @@
 
 Practice hiragana and katakana by gojūon line. Mixed tests from the first five rows (あかさたな), or any line you choose.
 
-**Live site:** [https://pixel404dot.github.io/japanese-test/](https://pixel404dot.github.io/japanese-test/)
+**Live site:** [https://pixel404dot.github.io/](https://pixel404dot.github.io/)
+
+Also at [https://pixel404dot.github.io/japanese-test/](https://pixel404dot.github.io/japanese-test/)
 
 ## What’s in the drill
 

@@ -6,6 +6,13 @@
  */
 
 import { z } from "zod";
+import { resolveParentEmbedderOrigin } from "./preview-embedder-origin";
+
+export {
+  isGrokEmbedderOrigin,
+  isSandboxPreviewGuestHost,
+  resolveParentEmbedderOrigin,
+} from "./preview-embedder-origin";
 
 export const PREVIEW_BRIDGE_CHANNEL = "grok-preview-bridge" as const;
 export const PREVIEW_BRIDGE_VERSION = 1 as const;
@@ -36,61 +43,6 @@ export type PreviewHostBridgeOptions = {
   /** Best-effort registered paths for host autosuggest (may be empty). */
   getRoutePaths?: () => string[];
 };
-
-/**
- * Whether `origin` is a known Grok embedder. Exported for tests.
- * Do not list internal staging hosts here — this file ships in download/export.
- */
-export function isGrokEmbedderOrigin(origin: string): boolean {
-  try {
-    const url = new URL(origin);
-    if (url.protocol !== "https:" && url.protocol !== "http:") return false;
-    const host = url.hostname.toLowerCase();
-    if (host === "grok.com" || host.endsWith(".grok.com")) return true;
-    // Local grok-web against a sandbox iframe (rare; http only).
-    if (host === "localhost" || host === "127.0.0.1" || host === "[::1]") return true;
-    return false;
-  } catch {
-    return false;
-  }
-}
-
-/** Public preview zone. Staging embedders frame this host via the proxy CSP. */
-export function isSandboxPreviewGuestHost(hostname: string): boolean {
-  const host = hostname.toLowerCase();
-  return host === "grok-sandbox.com" || host.endsWith(".grok-sandbox.com");
-}
-
-/** Resolve the parent origin to post to, or null when the bridge must noop. */
-export function resolveParentEmbedderOrigin(
-  parentIsSelf: boolean,
-  referrer: string,
-  ancestorOrigin?: string | null,
-  guestHostname: string = "",
-): string | null {
-  if (parentIsSelf) return null;
-  const candidates = [referrer, ancestorOrigin ?? ""].filter(Boolean);
-  for (const candidate of candidates) {
-    try {
-      const origin = candidate.includes("://")
-        ? new URL(candidate).origin
-        : candidate;
-      if (isGrokEmbedderOrigin(origin)) return origin;
-      // Sandbox previews are already CSP-pinned to the embedder. Accept that
-      // parent without naming staging hosts in the exported template.
-      if (!isSandboxPreviewGuestHost(guestHostname)) continue;
-      const parsed = new URL(
-        origin.includes("://") ? origin : `https://${origin}`,
-      );
-      if (parsed.protocol === "https:" || parsed.protocol === "http:") {
-        return parsed.origin;
-      }
-    } catch {
-      // try next candidate
-    }
-  }
-  return null;
-}
 
 export function isSafeBridgePath(path: string): boolean {
   if (!path.startsWith("/") || path.startsWith("//") || path.includes("\\")) {

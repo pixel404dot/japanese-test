@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Navigate } from "@tanstack/react-router";
 import { authEnabled, signOut } from "./client";
 import { useCurrentUser, useCurrentUserState } from "./use-current-user";
@@ -6,9 +6,9 @@ import { useCurrentUser, useCurrentUserState } from "./use-current-user";
 /**
  * Auth state components — plain wrappers around `useCurrentUserState()`.
  *
- * Auth is ON by default (including the sandbox live preview, which does real
- * sign-in). Visitors are signed out until they authenticate. The shared dev
- * user only appears when auth is explicitly disabled (`VITE_AUTH_ENABLED=false`).
+ * With auth on, visitors are signed out until they authenticate — in the sandbox
+ * live preview too, which does real sign-in. The shared dev user appears only
+ * when auth is disabled (`VITE_AUTH_ENABLED=false`, the shipped default).
  * While the session is still resolving, gates that care about signed-out state
  * render nothing so there's no signed-out flash on hard reload.
  */
@@ -51,6 +51,9 @@ export function RedirectToSignIn({ to = SIGN_IN_PATH }: { to?: string }) {
  */
 export function UserButton() {
   const user = useCurrentUser();
+  // Sign-out can take a moment (and can fail when deployed), so the control
+  // shows it is working and cannot be fired twice.
+  const [signingOut, setSigningOut] = useState(false);
   if (!user) return null;
   const label = user.displayName ?? user.primaryEmail ?? "Account";
   return (
@@ -70,10 +73,15 @@ export function UserButton() {
       {authEnabled && (
         <button
           type="button"
-          onClick={() => void signOut()}
-          className="cursor-pointer text-sm underline-offset-4 opacity-70 hover:underline"
+          disabled={signingOut}
+          onClick={() => {
+            setSigningOut(true);
+            // Success navigates away; on failure re-enable so it can be retried.
+            void signOut().catch(() => setSigningOut(false));
+          }}
+          className="cursor-pointer text-sm underline-offset-4 opacity-70 hover:underline disabled:cursor-wait disabled:no-underline"
         >
-          Sign out
+          {signingOut ? "Signing out…" : "Sign out"}
         </button>
       )}
     </div>

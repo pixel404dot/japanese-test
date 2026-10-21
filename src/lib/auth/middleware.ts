@@ -18,11 +18,12 @@ import { createMiddleware } from "@tanstack/react-start";
  *       return sql`select * from todos where user_id = ${context.userId}`;
  *     });
  *
- * Signed out (auth on — the default, including live preview) -> throws
- * `UnauthorizedError` (see `verify.server.ts`). Only when auth is explicitly
- * disabled (`VITE_AUTH_ENABLED=false`) does it resolve the shared dev user and
- * never throw. Use it on every server function that touches per-user data, and
- * scope every query by `context.userId`.
+ * Signed out with auth on (live preview included) -> throws `UnauthorizedError`
+ * (see `verify.server.ts`). With auth disabled (`VITE_AUTH_ENABLED=false`, the
+ * shipped default) it resolves the shared dev user — but throws instead when a
+ * `DATABASE_URL` is also set, so an app without sign-in must not use this at
+ * all. On the auth-on path, use it on every server function that touches
+ * per-user data and scope every query by `context.userId`.
  */
 export const authMiddleware = createMiddleware({ type: "function" })
   .client(async ({ next }) => {

@@ -1,5 +1,6 @@
 import { genericOAuthClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
+import { runPreSignInSignOut, runSignOut } from "../../../scripts/sign-out-plan.mjs";
 import { GROK_PROVIDERS } from "./providers";
 
 /**
@@ -11,6 +12,10 @@ import { GROK_PROVIDERS } from "./providers";
  * bearer token instead (captured from the popup, see `signIn`). The `onRequest`
  * hook attaches that token when present; when deployed (cookie auth) no token
  * is stored, so nothing changes.
+ *
+ * To sign out call `signOut()` below, NOT `authClient.signOut()`: the raw call
+ * leaves the bearer token in place, and `onRequest` keeps re-attaching it, so
+ * the visitor stays signed in.
  */
 export const authClient = createAuthClient({
   plugins: [genericOAuthClient()],
@@ -24,9 +29,11 @@ export const authClient = createAuthClient({
 });
 
 /**
- * True when sign-in UI should be shown. On by default (preview via the baked
- * preview client, deployed apps via the injected per-app client); set
- * `VITE_AUTH_ENABLED=false` to force it off (dev user — see `use-current-user`).
+ * True when sign-in UI should be shown — i.e. whenever `VITE_AUTH_ENABLED` is
+ * not `"false"`. The shipped template sets it to `"false"`
+ * (`.grok/app-env.json`), which selects the dev user (see `use-current-user`);
+ * with the key removed, sign-in is real in preview (baked preview client) and
+ * when deployed (injected per-app client).
  */
 export const authEnabled = import.meta.env.VITE_AUTH_ENABLED !== "false";
 
@@ -102,17 +109,16 @@ export async function signIn(
   const popup = inLivePreview() ? openSignInPopup(providerId) : null;
 
   // Clear any prior session so switching providers actually switches identity.
-  // In the live preview the iframe has no session cookie — only a bearer token —
-  // so skip the network signOut when there's nothing to clear.
-  const hadBearer = Boolean(getBearerToken());
-  if (hadBearer || !inLivePreview()) {
-    try {
-      await authClient.signOut();
-    } catch {
-      // No active session (or a transient sign-out error) — proceed to sign in.
-    }
-  }
-  setBearerToken(null);
+  // Bounded because the popup is already open — a request that never settles
+  // would leave it hanging — but bounded PER ENVIRONMENT: only the server can
+  // end a deployed session, so cutting it short at the preview's 1.5s would
+  // start OAuth with the old session still live.
+  await runPreSignInSignOut({
+    livePreview: inLivePreview(),
+    hasBearer: Boolean(getBearerToken()),
+    requestSignOut: () => authClient.signOut(),
+    clearToken: () => setBearerToken(null),
+  });
 
   if (inLivePreview()) {
     if (!popup) throw new Error("Pop-up blocked — allow pop-ups for sign-in");
@@ -200,12 +206,31 @@ function waitForPopupToken(popup: Window): Promise<string | null> {
   });
 }
 
-/** Sign out of THIS app's local session, clear the preview token, then redirect. */
+/**
+ * Sign out of THIS app's local session, clear the preview token, then redirect.
+ *
+ * Use this, never `authClient.signOut()` — see the note on `authClient`.
+ * Sequencing lives in `scripts/sign-out-plan.mjs` so it can be unit-tested.
+ *
+ * **Rejects when deployed if the server never confirms.** There the session is
+ * an HttpOnly cookie only the server can clear, so redirecting anyway would
+ * report a sign-out that did not happen. `<UserButton />` handles that for you;
+ * a hand-rolled control must catch it and let the visitor retry. In the live
+ * preview the local clear is sufficient, so it always resolves.
+ */
 export async function signOut(redirectTo = "/"): Promise<void> {
-  try {
-    await authClient.signOut();
-  } finally {
-    setBearerToken(null);
-  }
-  window.location.href = redirectTo;
+  await runSignOut({
+    livePreview: inLivePreview(),
+    hasBearer: Boolean(getBearerToken()),
+    // Better Auth resolves with `{ error }` instead of rejecting, so surface a
+    // failed response as a rejection for the sequence to act on.
+    requestSignOut: async () => {
+      const { error } = await authClient.signOut();
+      if (error) throw new Error(error.message ?? "Sign-out failed");
+    },
+    clearToken: () => setBearerToken(null),
+    redirect: () => {
+      window.location.href = redirectTo;
+    },
+  });
 }

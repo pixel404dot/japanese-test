@@ -1,51 +1,66 @@
-export const THEME_KEY = "kana-line-theme";
-export const THEME_LIGHT_BG = "#f3ead8";
-export const THEME_DARK_BG = "#14110e";
+export type ThemeChoice = "light" | "dark" | "system";
+export type PaletteChoice = "ink" | "sage" | "plum";
 
-export type Theme = "light" | "dark";
+const THEME_KEY = "learn-kana-theme";
+const PALETTE_KEY = "learn-kana-palette";
 
-export function readTheme(): Theme {
+export const PALETTES: {
+  id: PaletteChoice;
+  label: string;
+  swatches: string[];
+}[] = [
+  { id: "ink", label: "Ink", swatches: ["#0c0b0a", "#f2ebe0", "#8f2d1f"] },
+  { id: "sage", label: "Sage", swatches: ["#3f5344", "#e8eee4", "#f4f1ea"] },
+  { id: "plum", label: "Plum", swatches: ["#6b243c", "#f3e4d4", "#f7f0e8"] },
+];
+
+export function readTheme(): ThemeChoice {
   try {
-    const stored = localStorage.getItem(THEME_KEY);
-    if (stored === "light" || stored === "dark") return stored;
+    const v = localStorage.getItem(THEME_KEY);
+    if (v === "light" || v === "dark" || v === "system") return v;
   } catch {
-    /* private mode */
+    /* ignore */
   }
-  if (typeof window === "undefined") return "light";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return "dark";
 }
 
-export function applyTheme(theme: Theme) {
+export function readPalette(): PaletteChoice {
+  try {
+    const v = localStorage.getItem(PALETTE_KEY);
+    if (v === "ink" || v === "sage" || v === "plum") return v;
+  } catch {
+    /* ignore */
+  }
+  return "ink";
+}
+
+export function resolvedTheme(choice: ThemeChoice): "light" | "dark" {
+  if (choice === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return choice;
+}
+
+export function applyTheme(choice: ThemeChoice) {
+  const resolved = resolvedTheme(choice);
   const root = document.documentElement;
-  root.classList.toggle("dark", theme === "dark");
-  root.style.colorScheme = theme;
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) {
-    meta.setAttribute(
-      "content",
-      theme === "dark" ? THEME_DARK_BG : THEME_LIGHT_BG,
-    );
-  }
-}
-
-export function persistTheme(theme: Theme) {
+  root.dataset.theme = resolved;
+  root.classList.toggle("dark", resolved === "dark");
+  root.style.colorScheme = resolved;
   try {
-    localStorage.setItem(THEME_KEY, theme);
+    localStorage.setItem(THEME_KEY, choice);
   } catch {
-    /* private mode */
+    /* ignore */
   }
-  applyTheme(theme);
 }
 
-export function toggleTheme() {
-  const next: Theme = document.documentElement.classList.contains("dark")
-    ? "light"
-    : "dark";
-  persistTheme(next);
-  return next;
+export function applyPalette(choice: PaletteChoice) {
+  document.documentElement.dataset.palette = choice;
+  try {
+    localStorage.setItem(PALETTE_KEY, choice);
+  } catch {
+    /* ignore */
+  }
 }
-
-/** Runs before paint so the first frame matches the saved / system theme. */
-export const THEME_BOOT_SCRIPT = `(function(){try{var k=${JSON.stringify(THEME_KEY)};var s=localStorage.getItem(k);var d=s==="dark"||(s!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.classList.toggle("dark",d);r.style.colorScheme=d?"dark":"light";}catch(e){}})();`;

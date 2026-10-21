@@ -20,8 +20,9 @@
  *     and identities persist in the embedded PGLite DB (same DB as app data);
  *     the process restart wipes both. Live-preview iframe clients use a bearer
  *     token (partitioned cookies) — see `client.ts`.
- *   - Explicitly off (`VITE_AUTH_ENABLED=false`): no providers; per-user server
- *     functions fall back to a dev user (see `verify.server.ts`).
+ *   - Off (`VITE_AUTH_ENABLED=false`, the shipped default): no providers;
+ *     `requireUserId` resolves a dev user with no database configured, and
+ *     throws fail-closed once `DATABASE_URL` is set (see `verify.server.ts`).
  *
  * NEVER import this from client code — it pulls in `pg` + the preview secret +
  * server-only Better Auth internals. The client uses `@/lib/auth/client`;
@@ -36,6 +37,7 @@ import { randomBytes } from "node:crypto";
 import { Pool } from "pg";
 import { ensureDbReady, getPglite } from "../db";
 import { emailAndPasswordEnabled } from "./email-password";
+import { GATE_PROVIDER_ID, gateIdentitySessions } from "./gate-session.server";
 import { GROK_PROVIDERS } from "./providers";
 import { pgliteDialect } from "./pglite-dialect";
 import {
@@ -137,7 +139,8 @@ const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
 // Real Postgres when `DATABASE_URL` is set (deployed apps), else the app's
 // embedded PGLite (preview) via a Kysely dialect — so Better Auth persists to the
 // SAME DB as app data, including email/password users. Both use the Better Auth
-// schema from `migrations/0001_auth.sql`.
+// schema from `migrations/auth/0001_auth.sql`, copied into `migrations/` when
+// the app turns sign-in on.
 const database = databaseUrl
   ? new Pool({ connectionString: databaseUrl })
   : { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
@@ -191,7 +194,10 @@ export const auth = betterAuth({
     encryptOAuthTokens: true,
     accountLinking: {
       enabled: true,
-      trustedProviders: GROK_PROVIDERS.map((p) => p.providerId),
+      trustedProviders: [
+        ...GROK_PROVIDERS.map((p) => p.providerId),
+        GATE_PROVIDER_ID,
+      ],
       // X's synthetic email is never "verified", so don't gate linking on the
       // local user's email-verified state.
       requireLocalEmailVerified: false,
@@ -226,6 +232,8 @@ export const auth = betterAuth({
   },
 
   plugins: [
+    gateIdentitySessions(),
+
     // One genericOAuth provider per upstream (when auth is on), all federating
     // to the broker with the SAME client and differing only by the `idp` hint.
     ...(grokOAuthPlugin ? [grokOAuthPlugin] : []),

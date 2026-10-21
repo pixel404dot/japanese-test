@@ -3,3 +3,9 @@ node_modules/
 .github_repo
 .env
 .env.*
+screenshots/
+android/app/learnkana-release.keystore
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/

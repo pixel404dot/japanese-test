@@ -10,19 +10,58 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ChartRouteImport } from './routes/chart'
+import { Route as CardsRouteImport } from './routes/cards'
+import { Route as GrammarRouteImport } from './routes/grammar'
+import { Route as HiraganaRouteImport } from './routes/hiragana'
+import { Route as KanjiRouteImport } from './routes/kanji'
+import { Route as KatakanaRouteImport } from './routes/katakana'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as ReadingRouteImport } from './routes/reading'
+import { Route as ResultsRouteImport } from './routes/results'
+import { Route as VocabularyRouteImport } from './routes/vocabulary'
+import { Route as CardsIndexRouteImport } from './routes/cards.index'
+import { Route as CardsDeckIdRouteImport } from './routes/cards.$deckId'
+import { Route as GrammarIndexRouteImport } from './routes/grammar.index'
+import { Route as GrammarPointIdRouteImport } from './routes/grammar.$pointId'
+import { Route as ReadingIndexRouteImport } from './routes/reading.index'
+import { Route as ReadingLessonIdRouteImport } from './routes/reading.$lessonId'
+import { Route as VocabularyIndexRouteImport } from './routes/vocabulary.index'
+import { Route as VocabularyLessonIdRouteImport } from './routes/vocabulary.$lessonId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as CardsDeckIdStudyRouteImport } from './routes/cards.$deckId_.study'
+import { Route as GrammarPhasePhaseIdRouteImport } from './routes/grammar.phase.$phaseId'
+import { Route as VocabularyLessonIdShuffleRouteImport } from './routes/vocabulary.$lessonId_.shuffle'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ChartRoute = ChartRouteImport.update({
-  id: '/chart',
-  path: '/chart',
+const CardsRoute = CardsRouteImport.update({
+  id: '/cards',
+  path: '/cards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GrammarRoute = GrammarRouteImport.update({
+  id: '/grammar',
+  path: '/grammar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HiraganaRoute = HiraganaRouteImport.update({
+  id: '/hiragana',
+  path: '/hiragana',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KanjiRoute = KanjiRouteImport.update({
+  id: '/kanji',
+  path: '/kanji',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KatakanaRoute = KatakanaRouteImport.update({
+  id: '/katakana',
+  path: '/katakana',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -30,52 +69,258 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgressRoute = ProgressRouteImport.update({
   id: '/progress',
   path: '/progress',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ReadingRoute = ReadingRouteImport.update({
+  id: '/reading',
+  path: '/reading',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VocabularyRoute = VocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CardsIndexRoute = CardsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CardsRoute,
+} as any)
+const CardsDeckIdRoute = CardsDeckIdRouteImport.update({
+  id: '/$deckId',
+  path: '/$deckId',
+  getParentRoute: () => CardsRoute,
+} as any)
+const GrammarIndexRoute = GrammarIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GrammarRoute,
+} as any)
+const GrammarPointIdRoute = GrammarPointIdRouteImport.update({
+  id: '/$pointId',
+  path: '/$pointId',
+  getParentRoute: () => GrammarRoute,
+} as any)
+const ReadingIndexRoute = ReadingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ReadingRoute,
+} as any)
+const ReadingLessonIdRoute = ReadingLessonIdRouteImport.update({
+  id: '/$lessonId',
+  path: '/$lessonId',
+  getParentRoute: () => ReadingRoute,
+} as any)
+const VocabularyIndexRoute = VocabularyIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VocabularyRoute,
+} as any)
+const VocabularyLessonIdRoute = VocabularyLessonIdRouteImport.update({
+  id: '/$lessonId',
+  path: '/$lessonId',
+  getParentRoute: () => VocabularyRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardsDeckIdStudyRoute = CardsDeckIdStudyRouteImport.update({
+  id: '/$deckId_/study',
+  path: '/$deckId/study',
+  getParentRoute: () => CardsRoute,
+} as any)
+const GrammarPhasePhaseIdRoute = GrammarPhasePhaseIdRouteImport.update({
+  id: '/phase/$phaseId',
+  path: '/phase/$phaseId',
+  getParentRoute: () => GrammarRoute,
+} as any)
+const VocabularyLessonIdShuffleRoute =
+  VocabularyLessonIdShuffleRouteImport.update({
+    id: '/$lessonId_/shuffle',
+    path: '/$lessonId/shuffle',
+    getParentRoute: () => VocabularyRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/chart': typeof ChartRoute
+  '/cards': typeof CardsRouteWithChildren
+  '/grammar': typeof GrammarRouteWithChildren
+  '/hiragana': typeof HiraganaRoute
+  '/kanji': typeof KanjiRoute
+  '/katakana': typeof KatakanaRoute
   '/login': typeof LoginRoute
+  '/practice': typeof PracticeRoute
   '/progress': typeof ProgressRoute
+  '/reading': typeof ReadingRouteWithChildren
+  '/results': typeof ResultsRoute
+  '/vocabulary': typeof VocabularyRouteWithChildren
+  '/cards/$deckId': typeof CardsDeckIdRoute
+  '/grammar/$pointId': typeof GrammarPointIdRoute
+  '/reading/$lessonId': typeof ReadingLessonIdRoute
+  '/vocabulary/$lessonId': typeof VocabularyLessonIdRoute
+  '/cards/': typeof CardsIndexRoute
+  '/grammar/': typeof GrammarIndexRoute
+  '/reading/': typeof ReadingIndexRoute
+  '/vocabulary/': typeof VocabularyIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cards/$deckId/study': typeof CardsDeckIdStudyRoute
+  '/grammar/phase/$phaseId': typeof GrammarPhasePhaseIdRoute
+  '/vocabulary/$lessonId/shuffle': typeof VocabularyLessonIdShuffleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/chart': typeof ChartRoute
+  '/hiragana': typeof HiraganaRoute
+  '/kanji': typeof KanjiRoute
+  '/katakana': typeof KatakanaRoute
   '/login': typeof LoginRoute
+  '/practice': typeof PracticeRoute
   '/progress': typeof ProgressRoute
+  '/results': typeof ResultsRoute
+  '/cards/$deckId': typeof CardsDeckIdRoute
+  '/grammar/$pointId': typeof GrammarPointIdRoute
+  '/reading/$lessonId': typeof ReadingLessonIdRoute
+  '/vocabulary/$lessonId': typeof VocabularyLessonIdRoute
+  '/cards': typeof CardsIndexRoute
+  '/grammar': typeof GrammarIndexRoute
+  '/reading': typeof ReadingIndexRoute
+  '/vocabulary': typeof VocabularyIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cards/$deckId/study': typeof CardsDeckIdStudyRoute
+  '/grammar/phase/$phaseId': typeof GrammarPhasePhaseIdRoute
+  '/vocabulary/$lessonId/shuffle': typeof VocabularyLessonIdShuffleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/chart': typeof ChartRoute
+  '/cards': typeof CardsRouteWithChildren
+  '/grammar': typeof GrammarRouteWithChildren
+  '/hiragana': typeof HiraganaRoute
+  '/kanji': typeof KanjiRoute
+  '/katakana': typeof KatakanaRoute
   '/login': typeof LoginRoute
+  '/practice': typeof PracticeRoute
   '/progress': typeof ProgressRoute
+  '/reading': typeof ReadingRouteWithChildren
+  '/results': typeof ResultsRoute
+  '/vocabulary': typeof VocabularyRouteWithChildren
+  '/cards/$deckId': typeof CardsDeckIdRoute
+  '/grammar/$pointId': typeof GrammarPointIdRoute
+  '/reading/$lessonId': typeof ReadingLessonIdRoute
+  '/vocabulary/$lessonId': typeof VocabularyLessonIdRoute
+  '/cards/': typeof CardsIndexRoute
+  '/grammar/': typeof GrammarIndexRoute
+  '/reading/': typeof ReadingIndexRoute
+  '/vocabulary/': typeof VocabularyIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cards/$deckId_/study': typeof CardsDeckIdStudyRoute
+  '/grammar/phase/$phaseId': typeof GrammarPhasePhaseIdRoute
+  '/vocabulary/$lessonId_/shuffle': typeof VocabularyLessonIdShuffleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chart' | '/login' | '/progress' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/cards'
+    | '/grammar'
+    | '/hiragana'
+    | '/kanji'
+    | '/katakana'
+    | '/login'
+    | '/practice'
+    | '/progress'
+    | '/reading'
+    | '/results'
+    | '/vocabulary'
+    | '/cards/$deckId'
+    | '/grammar/$pointId'
+    | '/reading/$lessonId'
+    | '/vocabulary/$lessonId'
+    | '/cards/'
+    | '/grammar/'
+    | '/reading/'
+    | '/vocabulary/'
+    | '/api/auth/$'
+    | '/cards/$deckId/study'
+    | '/grammar/phase/$phaseId'
+    | '/vocabulary/$lessonId/shuffle'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chart' | '/login' | '/progress' | '/api/auth/$'
-  id: '__root__' | '/' | '/chart' | '/login' | '/progress' | '/api/auth/$'
+  to:
+    | '/'
+    | '/hiragana'
+    | '/kanji'
+    | '/katakana'
+    | '/login'
+    | '/practice'
+    | '/progress'
+    | '/results'
+    | '/cards/$deckId'
+    | '/grammar/$pointId'
+    | '/reading/$lessonId'
+    | '/vocabulary/$lessonId'
+    | '/cards'
+    | '/grammar'
+    | '/reading'
+    | '/vocabulary'
+    | '/api/auth/$'
+    | '/cards/$deckId/study'
+    | '/grammar/phase/$phaseId'
+    | '/vocabulary/$lessonId/shuffle'
+  id:
+    | '__root__'
+    | '/'
+    | '/cards'
+    | '/grammar'
+    | '/hiragana'
+    | '/kanji'
+    | '/katakana'
+    | '/login'
+    | '/practice'
+    | '/progress'
+    | '/reading'
+    | '/results'
+    | '/vocabulary'
+    | '/cards/$deckId'
+    | '/grammar/$pointId'
+    | '/reading/$lessonId'
+    | '/vocabulary/$lessonId'
+    | '/cards/'
+    | '/grammar/'
+    | '/reading/'
+    | '/vocabulary/'
+    | '/api/auth/$'
+    | '/cards/$deckId_/study'
+    | '/grammar/phase/$phaseId'
+    | '/vocabulary/$lessonId_/shuffle'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ChartRoute: typeof ChartRoute
+  CardsRoute: typeof CardsRouteWithChildren
+  GrammarRoute: typeof GrammarRouteWithChildren
+  HiraganaRoute: typeof HiraganaRoute
+  KanjiRoute: typeof KanjiRoute
+  KatakanaRoute: typeof KatakanaRoute
   LoginRoute: typeof LoginRoute
+  PracticeRoute: typeof PracticeRoute
   ProgressRoute: typeof ProgressRoute
+  ReadingRoute: typeof ReadingRouteWithChildren
+  ResultsRoute: typeof ResultsRoute
+  VocabularyRoute: typeof VocabularyRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -88,11 +333,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/chart': {
-      id: '/chart'
-      path: '/chart'
-      fullPath: '/chart'
-      preLoaderRoute: typeof ChartRouteImport
+    '/cards': {
+      id: '/cards'
+      path: '/cards'
+      fullPath: '/cards'
+      preLoaderRoute: typeof CardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/grammar': {
+      id: '/grammar'
+      path: '/grammar'
+      fullPath: '/grammar'
+      preLoaderRoute: typeof GrammarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hiragana': {
+      id: '/hiragana'
+      path: '/hiragana'
+      fullPath: '/hiragana'
+      preLoaderRoute: typeof HiraganaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kanji': {
+      id: '/kanji'
+      path: '/kanji'
+      fullPath: '/kanji'
+      preLoaderRoute: typeof KanjiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/katakana': {
+      id: '/katakana'
+      path: '/katakana'
+      fullPath: '/katakana'
+      preLoaderRoute: typeof KatakanaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -102,12 +375,96 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/progress': {
       id: '/progress'
       path: '/progress'
       fullPath: '/progress'
       preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/reading': {
+      id: '/reading'
+      path: '/reading'
+      fullPath: '/reading'
+      preLoaderRoute: typeof ReadingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vocabulary': {
+      id: '/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/vocabulary'
+      preLoaderRoute: typeof VocabularyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cards/': {
+      id: '/cards/'
+      path: '/'
+      fullPath: '/cards/'
+      preLoaderRoute: typeof CardsIndexRouteImport
+      parentRoute: typeof CardsRoute
+    }
+    '/cards/$deckId': {
+      id: '/cards/$deckId'
+      path: '/$deckId'
+      fullPath: '/cards/$deckId'
+      preLoaderRoute: typeof CardsDeckIdRouteImport
+      parentRoute: typeof CardsRoute
+    }
+    '/grammar/': {
+      id: '/grammar/'
+      path: '/'
+      fullPath: '/grammar/'
+      preLoaderRoute: typeof GrammarIndexRouteImport
+      parentRoute: typeof GrammarRoute
+    }
+    '/grammar/$pointId': {
+      id: '/grammar/$pointId'
+      path: '/$pointId'
+      fullPath: '/grammar/$pointId'
+      preLoaderRoute: typeof GrammarPointIdRouteImport
+      parentRoute: typeof GrammarRoute
+    }
+    '/reading/': {
+      id: '/reading/'
+      path: '/'
+      fullPath: '/reading/'
+      preLoaderRoute: typeof ReadingIndexRouteImport
+      parentRoute: typeof ReadingRoute
+    }
+    '/reading/$lessonId': {
+      id: '/reading/$lessonId'
+      path: '/$lessonId'
+      fullPath: '/reading/$lessonId'
+      preLoaderRoute: typeof ReadingLessonIdRouteImport
+      parentRoute: typeof ReadingRoute
+    }
+    '/vocabulary/': {
+      id: '/vocabulary/'
+      path: '/'
+      fullPath: '/vocabulary/'
+      preLoaderRoute: typeof VocabularyIndexRouteImport
+      parentRoute: typeof VocabularyRoute
+    }
+    '/vocabulary/$lessonId': {
+      id: '/vocabulary/$lessonId'
+      path: '/$lessonId'
+      fullPath: '/vocabulary/$lessonId'
+      preLoaderRoute: typeof VocabularyLessonIdRouteImport
+      parentRoute: typeof VocabularyRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -116,14 +473,101 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cards/$deckId_/study': {
+      id: '/cards/$deckId_/study'
+      path: '/$deckId/study'
+      fullPath: '/cards/$deckId/study'
+      preLoaderRoute: typeof CardsDeckIdStudyRouteImport
+      parentRoute: typeof CardsRoute
+    }
+    '/grammar/phase/$phaseId': {
+      id: '/grammar/phase/$phaseId'
+      path: '/phase/$phaseId'
+      fullPath: '/grammar/phase/$phaseId'
+      preLoaderRoute: typeof GrammarPhasePhaseIdRouteImport
+      parentRoute: typeof GrammarRoute
+    }
+    '/vocabulary/$lessonId_/shuffle': {
+      id: '/vocabulary/$lessonId_/shuffle'
+      path: '/$lessonId/shuffle'
+      fullPath: '/vocabulary/$lessonId/shuffle'
+      preLoaderRoute: typeof VocabularyLessonIdShuffleRouteImport
+      parentRoute: typeof VocabularyRoute
+    }
   }
 }
 
+interface CardsRouteChildren {
+  CardsDeckIdRoute: typeof CardsDeckIdRoute
+  CardsIndexRoute: typeof CardsIndexRoute
+  CardsDeckIdStudyRoute: typeof CardsDeckIdStudyRoute
+}
+
+const CardsRouteChildren: CardsRouteChildren = {
+  CardsDeckIdRoute: CardsDeckIdRoute,
+  CardsIndexRoute: CardsIndexRoute,
+  CardsDeckIdStudyRoute: CardsDeckIdStudyRoute,
+}
+
+const CardsRouteWithChildren = CardsRoute._addFileChildren(CardsRouteChildren)
+
+interface GrammarRouteChildren {
+  GrammarPointIdRoute: typeof GrammarPointIdRoute
+  GrammarIndexRoute: typeof GrammarIndexRoute
+  GrammarPhasePhaseIdRoute: typeof GrammarPhasePhaseIdRoute
+}
+
+const GrammarRouteChildren: GrammarRouteChildren = {
+  GrammarPointIdRoute: GrammarPointIdRoute,
+  GrammarIndexRoute: GrammarIndexRoute,
+  GrammarPhasePhaseIdRoute: GrammarPhasePhaseIdRoute,
+}
+
+const GrammarRouteWithChildren =
+  GrammarRoute._addFileChildren(GrammarRouteChildren)
+
+interface ReadingRouteChildren {
+  ReadingLessonIdRoute: typeof ReadingLessonIdRoute
+  ReadingIndexRoute: typeof ReadingIndexRoute
+}
+
+const ReadingRouteChildren: ReadingRouteChildren = {
+  ReadingLessonIdRoute: ReadingLessonIdRoute,
+  ReadingIndexRoute: ReadingIndexRoute,
+}
+
+const ReadingRouteWithChildren =
+  ReadingRoute._addFileChildren(ReadingRouteChildren)
+
+interface VocabularyRouteChildren {
+  VocabularyLessonIdRoute: typeof VocabularyLessonIdRoute
+  VocabularyIndexRoute: typeof VocabularyIndexRoute
+  VocabularyLessonIdShuffleRoute: typeof VocabularyLessonIdShuffleRoute
+}
+
+const VocabularyRouteChildren: VocabularyRouteChildren = {
+  VocabularyLessonIdRoute: VocabularyLessonIdRoute,
+  VocabularyIndexRoute: VocabularyIndexRoute,
+  VocabularyLessonIdShuffleRoute: VocabularyLessonIdShuffleRoute,
+}
+
+const VocabularyRouteWithChildren = VocabularyRoute._addFileChildren(
+  VocabularyRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ChartRoute: ChartRoute,
+  CardsRoute: CardsRouteWithChildren,
+  GrammarRoute: GrammarRouteWithChildren,
+  HiraganaRoute: HiraganaRoute,
+  KanjiRoute: KanjiRoute,
+  KatakanaRoute: KatakanaRoute,
   LoginRoute: LoginRoute,
+  PracticeRoute: PracticeRoute,
   ProgressRoute: ProgressRoute,
+  ReadingRoute: ReadingRouteWithChildren,
+  ResultsRoute: ResultsRoute,
+  VocabularyRoute: VocabularyRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
